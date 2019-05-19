@@ -1,0 +1,284 @@
+create table course
+(
+course_id number(10) constraint course_id_pk primary key,
+name varchar2(50) not null
+);
+alter table course add stream_id number(5);
+UPDATE course SET stream_id=101 WHERE course_id = 1;
+UPDATE course SET stream_id=101 WHERE course_id = 2;
+UPDATE course SET stream_id=102 WHERE course_id = 3;
+UPDATE course SET stream_id=102 WHERE course_id = 4;
+create sequence course_id_seq 
+start with 1
+increment by 1;
+select *from course;
+create table branch
+(
+branch_id number(10) constraint branch_id_pk primary key,
+name varchar2(70) not null,
+course_id number(10) constraint course_id_fk references course(course_id),
+hod_name varchar2(50) not null,
+num_seats_merit number(10) not null,
+num_seats_management number(10) not null
+);
+select *from branch;
+create sequence branch_id_seq 
+start with 1
+increment by 1;
+drop sequence branch_id_seq;
+
+create table trn_user_reg
+(
+user_id number(10) constraint user_id_pk primary key,
+name varchar2(50) not null,
+email varchar2(70) unique not null,
+password varchar(50) not null
+);
+commit;
+
+select *from trn_user_reg;
+select *from login;
+
+create sequence user_id_seq 
+start with 101
+increment by 1;
+
+create table trn_application
+(
+application_id number(10) constraint application_id_pk primary key,
+name varchar2(50) not null,
+father_name varchar2(50) not null,
+gender char(1) not null,
+date_of_birth date not null,
+phone_number number(10) unique not null,
+country varchar2(50) not null,
+state varchar2(50) not null,
+district varchar2(50) not null,
+school_name varchar2(50) not null,
+total_mark number(10) not null,
+course varchar2(50) not null,
+department varchar2(20) not null,
+branch varchar2(70) not null,
+type varchar2(30) not null,
+created_by number(10) not null,
+created_date TIMESTAMP not null,
+modified_by number(10) not null,
+modified_date TIMESTAMP not null
+);
+select *from branch;
+select *from course;
+
+
+select a.application_id as application_id, a.name as name,a.father_name as father_name,a.gender as gender,a.date_of_birth as date_of_birth,
+a.phone_number as phone_number,a.country as country,a.state as state,a.district as district,a.school_name as school_name,
+a.total_mark as total_mark,a.course as course,c.name as department,b.name as branch,a.type as type from trn_application a join branch b on
+b.branch_id=a.branch join course c on c.course_id=a.department where a.phone_number=654;
+
+
+select name from branch where branch_id=(select branch from trn_application where application_id=3);
+select name from trn_user_reg where user_id=(select created_by from trn_application where application_id=3);
+alter table trn_application add department varchar2(20) not null;
+create sequence application_id_seq 
+start with 1
+increment by 1;
+select user_id_seq.currval from dual;
+alter table trn_application drop column type;
+select *from trn_application;
+create table trn_payment
+(
+payment_id number(10) constraint payment_id_pk primary key,
+application_id number(10) constraint application_id_fk  references trn_application(application_id),
+amount number(10) not null,
+created_by number(10),
+created_date TIMESTAMP,
+modified_by number(10),
+modified_date TIMESTAMP
+);
+
+create sequence payment_id_seq 
+start with 1
+increment by 1;
+
+create table trn_result
+(
+result_id number(10) constraint result_id_pk primary key,
+application_id number(10) constraint application_id_fk1 references trn_application(application_id),
+result varchar2(20) not null
+);
+
+create sequence result_id_seq 
+start with 1
+increment by 1;
+
+insert into course 
+(course_id,name) values
+(course_id_seq.nextval,'B.E');
+insert into course 
+(course_id,name) values
+(course_id_seq.nextval,'B.Tech');
+insert into course 
+(course_id,name) values
+(course_id_seq.nextval,'B.Sc');
+insert into course 
+(course_id,name) values
+(course_id_seq.nextval,'B.A');
+
+select *from course;
+select *from branch;
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'computer science engineering',1,'Dr.Sudha',20,30);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'electrical and electronics engineering',1,'Dr.Shanmugam',20,30);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'mechanical engineering',1,'Dr.Sri ram',20,30);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'aeronautical engineering',1,'Dr.Meenakshi',15,25);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'information technology',2,'Dr.Ram kumar',20,25);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'bio technology',2,'Dr.Prakash',20,30);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'physics',3,'Dr.Praveena',10,22);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'maths',3,'Dr.Sekar',15,25);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'chemistry',3,'Dr.Natarajan',10,22);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'tamil',4,'Dr.Ramya',10,20);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'english',4,'Dr.Prem kumar',10,25);
+
+insert into branch 
+(branch_id,name,COURSE_ID,hod_name,NUM_SEATS_MANAGEMENT,NUM_SEATS_MERIT) values
+(branch_id_seq.nextval,'history',4,'Dr.Kani mozhi',10,20);
+
+select *from branch;
+
+
+
+
+ALTER TABLE branch
+ADD hod_name varchar2(50);
+drop table branch;
+drop column hod_name;
+
+
+
+CREATE TABLE login
+(login_id NUMBER(10) NOT NULL,
+user_name VARCHAR2(60) UNIQUE NOT NULL,
+password VARCHAR2(20) NOT NULL);
+desc login;
+
+ALTER TABLE login
+RENAME COLUMN login_id TO user_id;
+
+CREATE SEQUENCE login_id_seq
+START WITH 1
+INCREMENT BY 1;
+drop sequence login_id_seq;
+insert into login values(,'mahe@gmail.com','1234');
+
+commit;
+truncate table login;
+
+commit;
+
+select *from login;
+
+select course_id,name from course where stream_id=102;
+
+drop table login;
+
+select *from branch;
+select *from trn_application;
+desc trn_application;
+select course_id,name from course where stream_id=101;
+
+select branch_id,name from branch where course_id=1; 
+
+select login_id from login where user_name='karthi@gmail.com' and password='karthi';
+select *from login;
+select total_fees from merit where branch_id=2;
+
+select *from trn_application;
+select name from course where course_id=1;
+
+
+
+select name,course_id from branch where branch_id=1;
+
+select a.name as branch_name, b.name as course_name from branch a join course b on a.course_id=b.course_id where a.branch_id=1;
+
+ALTER TABLE quotation
+ADD total_mark number(10);
+create table quotation
+(
+quotation_id number(5) constraint quatation_id_pk primary key,
+user_name varchar2(50) not null,
+course varchar2(50) not null,
+Department varchar2(50) not null,
+branch varchar2(50) not null,
+quote float not null
+);
+drop table quotation;
+select *from quotation;
+create sequence quatation_id_seq
+start with 1
+increment by 1;
+
+select a.name as branch_name, b.name as course_name from branch a join course b on a.course_id=b.course_id where a.branch_id=1;
+ CREATE TABLE "HR"."MERIT" 
+   (	"MERIT_ID" NUMBER(10,0), 
+	"TOTAL_FEES" FLOAT(126), 
+	"BRANCH_ID" NUMBER(10,0)
+   );
+   Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (1,40000,1);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (2,30000,2);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (3,50000,3);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (4,35000,4);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (5,40000,5);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (6,25000,6);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (7,20000,7);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (8,20000,8);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (9,22000,9);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (10,10000,10);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (11,10000,11);
+Insert into HR.MERIT (MERIT_ID,TOTAL_FEES,BRANCH_ID) values (12,10000,12);
+
+
+
+insert into quotation(quotation_id,user_name,course,department,branch,quote) values
+(quatation_id_seq.nextval,'karthi','engineering',1,2,10000);
+insert into quotation(quotation_id,user_name,course,department,branch,quote) values
+(quatation_id_seq.nextval,'kowsi','arts',3,7,20000);
+
+select a.user_name,a.course,b.name,c.name,a.quote from quotation a join 
+course b on a.department=b.course_id join branch c on c.branch_id = a.branch;
+
+
+select a.quotation_id,a.user_name,a.course,b.name as department_name,
+c.name as branch_name,a.total_mark,a.quote from quotation a 
+join course b on a.department=b.course_id join branch c on c.branch_id = a.branch;
+
